@@ -3,7 +3,7 @@
 A Flutter app for real-time animal tracking, geo-fencing, and rescue reporting.
 
 ## Features
-- 📍 Live GPS tracking on OpenStreetMap
+- 📍 Live GPS tracking on OpenStreetMap API
 - 🚧 Geo-fence zones with breach detection
 - 📊 Dashboard with live stats
 - 🤖 AI-powered rescue reports (Gemini Vision)
