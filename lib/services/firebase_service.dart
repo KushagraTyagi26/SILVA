@@ -249,7 +249,13 @@ class FirebaseService {
     required String reporterName,
   }) async {
     final caseRef = _db.collection('rescue_cases').doc();
-    final photoUrl = await uploadRescuePhoto(imageFile, caseRef.id);
+    // Try to upload photo — if storage rules block it, continue without photo
+    String? photoUrl;
+    try {
+      photoUrl = await uploadRescuePhoto(imageFile, caseRef.id);
+    } catch (e) {
+      print('Photo upload failed (continuing without photo): $e');
+    }
     await caseRef.set({
       'photoUrl': photoUrl,
       'animalType': assessment.animalType,
@@ -273,12 +279,21 @@ class FirebaseService {
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
-    if (assessment.urgencyLevel == 'Code Red' || assessment.urgencyLevel == 'Emergency') {
+    if (assessment.urgencyLevel == 'Code Red' || assessment.urgencyLevel == 'Emergency'
+        || assessment.urgencyLevel == 'Urgent' || assessment.urgencyLevel == 'Routine') {
       await _db.collection('alerts').add({
-        'type': 'rescue_case', 'severity': 'critical',
-        'animalName': '${assessment.animalType} (Rescue Case)',
-        'message': '🚨 ${assessment.urgencyLevel}: ${assessment.animalType} needs help! ${assessment.aiSummary}',
-        'caseId': caseRef.id, 'status': 'active', 'location': location,
+        'type': 'rescue_case',
+        'severity': assessment.urgencyLevel == 'Code Red' ? 'critical'
+            : assessment.urgencyLevel == 'Emergency' ? 'high'
+            : assessment.urgencyLevel == 'Urgent' ? 'medium' : 'low',
+        'animalId': caseRef.id,
+        'animalName': '${assessment.animalType} (Rescue)',
+        'message': '${assessment.urgencyLevel == 'Code Red' ? '🚨' : assessment.urgencyLevel == 'Emergency' ? '⚠️' : '📋'} ${assessment.urgencyLevel}: ${assessment.animalType} reported near $locationDescription. ${assessment.aiSummary}',
+        'caseId': caseRef.id,
+        'status': 'active',
+        'location': location,
+        'locationDescription': locationDescription,
+        'reportedBy': reporterName,
         'createdAt': FieldValue.serverTimestamp(),
       });
     }

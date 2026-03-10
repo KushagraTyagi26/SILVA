@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/firebase_service.dart';
 import '../utils/app_theme.dart';
 import 'animal_detail_screen.dart';
-import 'map_screen.dart';
+import 'settings_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -27,17 +27,17 @@ class DashboardScreen extends StatelessWidget {
                     top: MediaQuery.of(context).padding.top + 10, left: 20, right: 20, bottom: 12),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
                   Row(children: [
-                    Container(width: 38, height: 38,
-                        decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(10)),
-                        child: const Icon(Icons.track_changes_rounded, color: Colors.white, size: 22)),
+                    ClipRRect(borderRadius: BorderRadius.circular(10),
+                        child: Image.asset('assets/silva_logo.png', width: 42, height: 42, fit: BoxFit.cover)),
                     const SizedBox(width: 10),
-                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text('SILVA', style: GoogleFonts.playfairDisplay(
-                          fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 3)),
-                      Text('Wildlife Monitoring', style: GoogleFonts.dmSans(
-                          fontSize: 11, color: AppColors.textSecondary, letterSpacing: 1)),
-                    ]),
-                    const Spacer(),
+                          fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 3)),
+                      Text('Surveillance and Intervention for Living Wildlife Assistance',
+                          style: GoogleFonts.dmSans(fontSize: 9, color: AppColors.textSecondary, letterSpacing: 0.3),
+                          maxLines: 2, overflow: TextOverflow.ellipsis),
+                    ])),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(color: AppColors.success.withOpacity(0.12), borderRadius: BorderRadius.circular(20),
@@ -47,6 +47,22 @@ class DashboardScreen extends StatelessWidget {
                         const SizedBox(width: 5),
                         Text('Live', style: GoogleFonts.dmSans(color: AppColors.success, fontWeight: FontWeight.w700, fontSize: 12)),
                       ]),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
+                      child: Builder(builder: (_) {
+                        final user = FirebaseService.currentUser;
+                        final photoUrl = user?.photoURL;
+                        final name = user?.displayName ?? user?.email ?? 'U';
+                        return CircleAvatar(
+                          radius: 18,
+                          backgroundColor: AppColors.primary.withOpacity(0.15),
+                          backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                          child: photoUrl == null ? Text(name[0].toUpperCase(),
+                              style: GoogleFonts.dmSans(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)) : null,
+                        );
+                      }),
                     ),
                   ]),
                 ]),
@@ -219,20 +235,21 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
           border: Border.all(color: color.withOpacity(0.15)),
           boxShadow: [BoxShadow(color: color.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))]),
       child: Row(children: [
-        Container(width: 44, height: 44,
-            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: color, size: 22)),
-        const SizedBox(width: 12),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(width: 40, height: 40,
+            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, color: color, size: 20)),
+        const SizedBox(width: 10),
+        Flexible(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(value, style: GoogleFonts.playfairDisplay(
-              fontSize: 26, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-          Text(label, style: GoogleFonts.dmSans(fontSize: 12, color: AppColors.textSecondary)),
-        ]),
+              fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          Text(label, style: GoogleFonts.dmSans(fontSize: 11, color: AppColors.textSecondary),
+              maxLines: 1, overflow: TextOverflow.ellipsis),
+        ])),
       ]),
     );
   }

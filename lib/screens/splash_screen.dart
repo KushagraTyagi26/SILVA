@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
     final user = FirebaseAuth.instance.currentUser;
     Navigator.pushReplacement(context, MaterialPageRoute(
@@ -48,26 +48,32 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               colors: [Color(0xFFFFF8EE), Color(0xFFFDF0D5), Color(0xFFFFE0A0)]),
         ),
         child: Stack(children: [
-          Positioned(top: 60, right: 30, child: Icon(Icons.pets, size: 80, color: AppColors.primary.withOpacity(0.08))),
-          Positioned(bottom: 120, left: 20, child: Icon(Icons.pets, size: 60, color: AppColors.primary.withOpacity(0.06))),
-          Positioned(top: 200, left: 50, child: Icon(Icons.pets, size: 40, color: AppColors.primary.withOpacity(0.05))),
+          Positioned(top: 60, right: 30, child: Icon(Icons.pets, size: 80, color: AppColors.primary.withOpacity(0.06))),
+          Positioned(bottom: 120, left: 20, child: Icon(Icons.pets, size: 60, color: AppColors.primary.withOpacity(0.05))),
           Center(
             child: AnimatedBuilder(animation: _ctrl, builder: (_, __) => FadeTransition(
               opacity: _fade,
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 ScaleTransition(scale: _scale, child: Container(
-                  width: 110, height: 110,
-                  decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(32),
-                      boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.4), blurRadius: 30, offset: const Offset(0, 12))]),
-                  child: const Icon(Icons.track_changes_rounded, size: 60, color: Colors.white),
+                  width: 140, height: 140,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(36),
+                    boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.25), blurRadius: 40, offset: const Offset(0, 16))],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(36),
+                    child: Image.asset('assets/silva_logo.png', fit: BoxFit.cover),
+                  ),
                 )),
                 const SizedBox(height: 28),
                 SlideTransition(position: _slide, child: Column(children: [
                   Text('SILVA', style: GoogleFonts.playfairDisplay(
                       fontSize: 52, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 6)),
                   const SizedBox(height: 8),
-                  Text('Track • Rescue • Protect', style: GoogleFonts.dmSans(
-                      fontSize: 13, color: AppColors.textSecondary, letterSpacing: 3, fontWeight: FontWeight.w500)),
+                  Text('Surveillance and Intervention for\nLiving Wildlife Assistance',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.dmSans(fontSize: 12, color: AppColors.textSecondary, letterSpacing: 1, fontWeight: FontWeight.w500)),
                 ])),
                 const SizedBox(height: 60),
                 SizedBox(width: 32, height: 32,

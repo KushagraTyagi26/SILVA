@@ -328,8 +328,7 @@ class _FenceCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text('GPS: ${(d['breachLat'] as num).toStringAsFixed(5)}, '
                         '${(d['breachLng'] as num).toStringAsFixed(5)}',
-                        style: GoogleFonts.dmSans(fontSize: 11, color: AppColors.textLight,
-                            fontFamily: 'monospace')),
+                        style: GoogleFonts.dmSans(fontSize: 11, color: AppColors.textLight)),
                   ]),
                 ],
               ]),

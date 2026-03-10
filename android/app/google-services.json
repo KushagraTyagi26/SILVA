@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "883318046807",
+    "project_id": "silva-3060b",
+    "storage_bucket": "silva-3060b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883318046807:android:63a099228cd408cf0d6312",
+        "android_client_info": {
+          "package_name": "com.example.silva"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883318046807-3md4d9qfholp49pk1rrls4io168579p7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmk2jGxAx6yKbl2wtou7cLArylyfO_OCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883318046807-3md4d9qfholp49pk1rrls4io168579p7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

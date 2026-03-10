@@ -5,8 +5,9 @@ import '../utils/app_theme.dart';
 import 'dashboard_screen.dart';
 import 'map_screen.dart';
 import 'alerts_screen.dart';
-import 'species_screen.dart';
+import 'news_screen.dart';
 import 'report_rescue_screen.dart';
+import 'settings_screen.dart';
 
 class MainNavScreen extends StatefulWidget {
   const MainNavScreen({super.key});
@@ -15,26 +16,25 @@ class MainNavScreen extends StatefulWidget {
 }
 
 class _MainNavScreenState extends State<MainNavScreen> {
+  // 0=Dashboard, 1=Map, 2=camera(push only), 3=News, 4=Alerts
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    DashboardScreen(),
-    MapScreen(),
-    SizedBox(), // placeholder for center camera button
-    AlertsScreen(),
-    SpeciesScreen(),
-  ];
+  // maps nav index to stack index (skip 2)
+  int get _stackIndex {
+    if (_currentIndex < 2) return _currentIndex;
+    return _currentIndex - 1; // 3->2, 4->3
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: _currentIndex == 2 ? 0 : _currentIndex,
-        children: [
-          const DashboardScreen(),
-          const MapScreen(),
-          const AlertsScreen(),
-          const SpeciesScreen(),
+        index: _stackIndex,
+        children: const [
+          DashboardScreen(),  // 0
+          MapScreen(),        // 1
+          NewsScreen(),       // 2 (nav index 3)
+          AlertsScreen(),     // 3 (nav index 4)
         ],
       ),
       bottomNavigationBar: _SilvaNavBar(
@@ -67,61 +67,52 @@ class _SilvaNavBar extends StatelessWidget {
         top: false,
         child: SizedBox(
           height: 66,
-          child: Row(
-            children: [
-              // Dashboard
-              _NavItem(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard_rounded,
-                  label: 'Dashboard', isActive: currentIndex == 0, onTap: () => onTap(0)),
-              // Map
-              _NavItem(icon: Icons.map_outlined, activeIcon: Icons.map_rounded,
-                  label: 'Map', isActive: currentIndex == 1, onTap: () => onTap(1)),
+          child: Row(children: [
+            _NavItem(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard_rounded,
+                label: 'Dashboard', isActive: currentIndex == 0, onTap: () => onTap(0)),
+            _NavItem(icon: Icons.map_outlined, activeIcon: Icons.map_rounded,
+                label: 'Map', isActive: currentIndex == 1, onTap: () => onTap(1)),
 
-              // Centre camera button — pops up
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => onTap(2),
-                  child: SizedBox(
-                    height: 66,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          top: -22,
-                          child: Container(
-                            width: 58, height: 58,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(color: AppColors.primary.withOpacity(0.45),
-                                    blurRadius: 18, offset: const Offset(0, 6)),
-                                BoxShadow(color: Colors.white, blurRadius: 0,
-                                    spreadRadius: 3, offset: Offset.zero),
-                              ],
-                            ),
-                            child: const Icon(Icons.add_a_photo_rounded, color: Colors.white, size: 26),
+            // Centre camera button — pops up
+            Expanded(
+              child: GestureDetector(
+                onTap: () => onTap(2),
+                child: SizedBox(
+                  height: 66,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned(
+                        top: -22,
+                        child: Container(
+                          width: 58, height: 58,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary, shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(color: AppColors.primary.withOpacity(0.45), blurRadius: 18, offset: const Offset(0, 6)),
+                              const BoxShadow(color: Colors.white, blurRadius: 0, spreadRadius: 3),
+                            ],
                           ),
+                          child: const Icon(Icons.add_a_photo_rounded, color: Colors.white, size: 26),
                         ),
-                        Positioned(
-                          bottom: 6,
-                          child: Text('Report', style: GoogleFonts.dmSans(
-                              fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.primary)),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        bottom: 6,
+                        child: Text('Report', style: GoogleFonts.dmSans(
+                            fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
 
-              // Alerts
-              _NavItem(icon: Icons.notifications_outlined, activeIcon: Icons.notifications_rounded,
-                  label: 'Alerts', isActive: currentIndex == 3, onTap: () => onTap(3)),
-              // Species
-              _NavItem(icon: Icons.pets_outlined, activeIcon: Icons.pets_rounded,
-                  label: 'Species', isActive: currentIndex == 4, onTap: () => onTap(4)),
-            ],
-          ),
+            _NavItem(icon: Icons.article_outlined, activeIcon: Icons.article_rounded,
+                label: 'News', isActive: currentIndex == 3, onTap: () => onTap(3)),
+            _NavItem(icon: Icons.notifications_outlined, activeIcon: Icons.notifications_rounded,
+                label: 'Alerts', isActive: currentIndex == 4, onTap: () => onTap(4)),
+          ]),
         ),
       ),
     );
