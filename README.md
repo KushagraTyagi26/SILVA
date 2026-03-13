@@ -1,6 +1,6 @@
 # 🐾 SILVA — Surveillance and Intervention for Living Wildlife Assistance
 
-A Flutter app for real-time animal tracking, Geo-fencing, and Rescue reporting.
+A Flutter app for real-time animal tracking, Geo-fencing, and Rescue Reporting.
 
 ## Features
 - 📍  Live GPS tracking on OpenStreetMap API
